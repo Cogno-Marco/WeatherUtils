@@ -1,0 +1,19 @@
+{
+    "name": "com.weatherlight.weather-utils",
+    "version": "1.0.0",
+    "displayName": "Weatherlight Utils",
+    "description": "Weatherlight Custom Utilities Package",
+    "unity": "2019.1",
+    "unityRelease": "0b5",
+   "keywords": [
+      "Weatherlight",
+      "Utils",
+      "WeatherUtils",
+      "Utilities"
+    ],
+    "author": {
+      "name": "Weatherlight",
+      "email": "marco.cognolato.98@gmail.com",
+      "url": "https://weatherlightstudios.github.io/"
+    }
+  }
