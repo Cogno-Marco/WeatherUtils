@@ -59,4 +59,5 @@ To properly contribute:
 
 
 # License
-TBD
+
+The library use the MIT license, you can check `LICENSE.md` for more details
