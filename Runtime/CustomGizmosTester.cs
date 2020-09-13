@@ -26,12 +26,26 @@ public class CustomGizmosTester : MonoBehaviour
     [Header("Rect Param")]
     public float rectSizeAmplitude = 0.4f;
     
+    [Header("Poligons Params")]
+    public float sidesCountAmplitude = 5f;
+    [Range(0f, 60f)]
+    public float normalAmplitude = 1f;
+    [Range(0f,2f)]
+    public float polygonsRadius = 2f;
+    public float positionAmplitude = 0.5f;
+    
+    [Header("Circle Params")]
+    [Range(0f,2f)]
+    public float circleRadius = 2f;
+    
+    
     private float currentAngle;
     private float lerpingParam;
     private float lerpingHalfParam;
     private float editorDeltaTime;
     private float lastEditorTime;
     private float sinParam;
+    private float doubleSinParam;
     
     private void OnDrawGizmos() {
         //calculate editor time
@@ -48,6 +62,7 @@ public class CustomGizmosTester : MonoBehaviour
         currentAngle %= 360;
 
         sinParam = Mathf.Sin(lerpingParam * 2 * Mathf.PI);
+        doubleSinParam = Mathf.Sin(lerpingParam * 4 * Mathf.PI);
         
         //Draw all shapes        
         ArrowHead();
@@ -58,6 +73,8 @@ public class CustomGizmosTester : MonoBehaviour
         Bezier();
         BezierArrow();
         Rectangle();
+        Polygons();
+        Circle();
         
         //reset params
         MemoryReset();
@@ -130,6 +147,7 @@ public class CustomGizmosTester : MonoBehaviour
         bezierPoints.Add(new Vector3(0,0,5));
         float bezSinParam = Mathf.Sin(lerpingHalfParam * 2 * Mathf.PI);
         CustomGizmos.BezierWithArrow(bezierPoints, 10, (bezSinParam + 1) / 2, arrowTipSize, currentDirection);
+        
     }
     
     /// <summary>
@@ -144,6 +162,24 @@ public class CustomGizmosTester : MonoBehaviour
         );
         CustomGizmos.DrawCrossedRect(new Vector3(4,0,1.5f), Vector3.forward, Vector3.right, halfSizes, 5);
     }
+    
+    /// <summary>
+    /// Draws regular polygons animation
+    /// </summary>
+    private void Polygons(){
+        int sidesCount = 3 + (int)(sidesCountAmplitude * (sinParam + 1) / 2);
+        Vector3 currentDirection = Quaternion.AngleAxis(doubleSinParam * normalAmplitude, new Vector3(-1,0,1).normalized) * Vector3.up;
+        CustomGizmos.DrawRegularPoligon(new Vector3(6,0,2) + Vector3.right * sinParam * positionAmplitude, Vector3.right, polygonsRadius, sidesCount, currentDirection);
+    }
+    
+    /// <summary>
+    /// Draws a rotating circle
+    /// </summary>
+    private void Circle(){
+        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, new Vector3(-1,0,1).normalized) * Vector3.up;
+        CustomGizmos.DrawRegularPoligon(new Vector3(5,0,4), Vector3.right, circleRadius, 30, currentDirection);
+    }
+    
     
     /// <summary>
     /// Resets memory footprint for bezier if necessary

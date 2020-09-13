@@ -387,4 +387,32 @@ public class CustomGizmos
             Gizmos.DrawLine(secondPartList[i], secondPartList[i+1]);
         }
     }
+    
+
+    /// <summary>
+    /// Draws a regular poligon (triangle, square, pentagon and so on) given it's center, the direction and length of it's radius,
+    /// how many sides to draw and the normal direction to draw the poligon towards.
+    /// Can also be used to draw 2D circles by increasing the number of sides to draw
+    /// </summary>
+    /// <param name="center">Center position of the polygon</param>
+    /// <param name="direction">Direction towards the first point of the polygon</param>
+    /// <param name="radius">A positive radius of the circle which sircumscribes the polygon</param>
+    /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
+    /// <param name="normal">Perpendicular of the plane containing the circle</param>
+    public static void DrawRegularPoligon(Vector3 center, Vector3 direction, float radius, int sidesCount, Vector3 normal){
+        if(sidesCount < 3){
+            Debug.LogWarning("Attempted to draw a polygon with less than 3 sides");
+            return;
+        }
+        Vector3 rightDir = direction.normalized;
+        Vector3 upDir = Vector3.Cross(rightDir, normal.normalized).normalized;
+        
+        for(int i = 0; i < sidesCount; i++){
+            float angleStep = 2f * Mathf.PI / sidesCount;
+            Vector3 p1 = center + radius * rightDir * Mathf.Cos(angleStep * i)       + radius * upDir * Mathf.Sin(angleStep * i);
+            Vector3 p2 = center + radius * rightDir * Mathf.Cos(angleStep * (i + 1)) + radius * upDir * Mathf.Sin(angleStep * (i + 1));
+            Gizmos.DrawLine(p1, p2);
+        }
+    }
+    
 }
