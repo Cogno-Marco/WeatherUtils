@@ -2,22 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class for using 2d version of gizmos.
+/// 2D gizmos will be placed in the xy plane (unity's default 2d plane)
+/// TODO: enable usage in xz and yz plane using an enum or something
+/// </summary>
 public class CustomGizmos2D
 {
     /// <summary>
-    /// Draws a gizmo arrow at startPos pointing at endPos
+    /// Draws a gizmo2d arrow at startPos pointing at endPos
     /// </summary>
     /// <param name="startPos">The point where the arrow starts from</param>
     /// <param name="endPos">The point where the arrow points to</param>
     /// <param name="tipSize">The size of the arrow head</param>
-    /// <param name="normal">The normal vector of the arrow tip, used to orient the arrow tip in a custom direction</oaram>
-    public static void DrawArrow(Vector3 startPos, Vector3 endPos, float tipSize, Vector3 normal){
-        Vector3 line = endPos - startPos;
-        Vector3 arrowDir = line.normalized;
-        float arrowLength = line.magnitude - tipSize;
-        Vector3 lineEndPos = startPos + arrowDir * arrowLength;
-        Gizmos.DrawLine(lineEndPos, startPos);
-        DrawArrowTip(lineEndPos, arrowDir, tipSize, normal);
+    public static void DrawArrow(Vector2 startPos, Vector2 endPos, float tipSize){
+        CustomGizmos.DrawArrow(startPos, endPos, tipSize, Vector3.forward);
+    }
+    
+    /// <summary>
+    /// Draws a gizmo2d arrow at startPos and with a direction and a length, using polar coordinates
+    /// </summary>
+    /// <param name="startPos">The point where the arrow starts from</param>
+    /// <param name="direction">The direction the arrow points towards</param>
+    /// <param name="length">The length of the arrow</param>
+    /// <param name="tipSize">The size of the arrow head</param>
+    public static void DrawArrow(Vector2 startPos, Vector2 direction, float length, float tipSize){
+        DrawArrow(startPos, startPos + direction.normalized * length, tipSize);
+    }
+    
+    /// <summary>
+    /// Draws a gizmo2d arrow at startPos and with a direction and a length, using polar coordinates
+    /// Asks for an angle instead of a direction
+    /// </summary>
+    /// <param name="startPos">The point where the arrow starts from</param>
+    /// <param name="direction">The direction the arrow points towards</param>
+    /// <param name="length">The length of the arrow</param>
+    /// <param name="tipSize">The size of the arrow head</param>
+    public static void DrawArrow(Vector2 startPos, float angle, float length, float tipSize){
+        DrawArrow(startPos, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), length, tipSize);
     }
     
     /// <summary>

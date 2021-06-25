@@ -65,20 +65,29 @@ public class CustomGizmos2DTester : MonoBehaviour
         doubleSinParam = Mathf.Sin(lerpingParam * 4 * Mathf.PI);
         
         //Draw all shapes        
-        ArrowHead();
-        Lines();
         Arrow();
-        LineArrow();
-        HGizmo();
-        Bezier();
-        BezierArrow();
-        Rectangle();
-        Polygons();
-        Circle();
+        // ArrowHead();
+        // Lines();
+        // LineArrow();
+        // HGizmo();
+        // Bezier();
+        // BezierArrow();
+        // Rectangle();
+        // Polygons();
+        // Circle();
         
         //reset params
         MemoryReset();
         lastEditorTime = currentTime;
+    }
+    
+    /// <summary>
+    /// Calculates and draws arrow
+    /// </summary>
+    private void Arrow(){
+        Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset);
+        
+        CustomGizmos2D.DrawArrow(arrowHeadPos, Vector3.down, 1f, arrowTipSize);
     }
     
     /// <summary>
@@ -98,16 +107,6 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos.DrawLine(new Vector3(1f,0,0), new Vector3(1f,0,1), 1f - sinParam * linesAmplitude - linesOffset, 0);
         CustomGizmos.DrawLine(new Vector3(1.2f,0,0), new Vector3(1.2f,0,1), sinParam * linesAmplitude + linesOffset);
         CustomGizmos.DrawLine(new Vector3(1.4f,0,0), new Vector3(1.4f,0,1), 0, 1 - sinParam * linesAmplitude - linesOffset);
-    }
-    
-    /// <summary>
-    /// Calculates and draws arrow
-    /// </summary>
-    private void Arrow(){
-        Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset) + new Vector3(0.5f, 1f, 1.5f);
-        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, Vector3.up) * Vector3.forward;
-        
-        CustomGizmos.DrawArrow(arrowHeadPos, arrowHeadPos + Vector3.down, arrowTipSize, currentDirection);
     }
     
     /// <summary>
