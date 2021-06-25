@@ -35,7 +35,7 @@ public class CustomGizmos2D
     /// Asks for an angle instead of a direction
     /// </summary>
     /// <param name="startPos">The point where the arrow starts from</param>
-    /// <param name="direction">The direction the arrow points towards</param>
+    /// <param name="angle">The angle the arrow points towards (in radians)</param>
     /// <param name="length">The length of the arrow</param>
     /// <param name="tipSize">The size of the arrow head</param>
     public static void DrawArrow(Vector2 startPos, float angle, float length, float tipSize){
@@ -50,17 +50,12 @@ public class CustomGizmos2D
     /// <param name="position">The position to place the arrow tip</param>
     /// <param name="direction">The direction of the tip</param>
     /// <param name="size">The size of the arrow tip</param>
-    /// <param name="normal">The normal vector of the arrow tip, used to orient the arrow tip</param>
-    public static void DrawArrowTip(Vector3 position, Vector3 direction, float size, Vector3 normal){
-        Vector3 dir = direction.normalized;
-        Vector3 tipPos = position + dir * size;
-        Vector3 sideDir1 = Quaternion.AngleAxis(+45, normal) * -dir;
-        Vector3 sideDir2 = Quaternion.AngleAxis(-45, normal) * -dir;
-        float lengthSize = size * Mathf.Sqrt(5) / 2;    //s^2 + s^2/4 = lengthSize^2
-        Gizmos.DrawLine(tipPos, tipPos + sideDir1 * lengthSize);
-        Gizmos.DrawLine(tipPos, tipPos + sideDir2 * lengthSize);
+    public static void DrawArrowTip(Vector3 position, Vector3 direction, float size){
+        CustomGizmos.DrawArrowTip(position, direction, size, Vector3.forward);
     }
     
+    
+    /*
     /// <summary>
     /// Draws a line with empty space at the end and at the start
     /// </summary>
@@ -124,7 +119,7 @@ public class CustomGizmos2D
         Vector3 offset = endPos - startPos;
         Vector3 tipMaxPos = startPos + offset.normalized * (offset.magnitude - tipSize);
         Vector3 currentTipPos = Vector3.Lerp(startPos, tipMaxPos, placementPercentage);
-        DrawArrowTip(currentTipPos, offset.normalized, tipSize, normal);
+        CustomGizmos.DrawArrowTip(currentTipPos, offset.normalized, tipSize, normal);
         Gizmos.DrawLine(startPos, currentTipPos);
         DrawLine(currentTipPos + offset.normalized * tipSize, endPos, tipSize / 2, 0);
     }
@@ -383,7 +378,7 @@ public class CustomGizmos2D
         Vector3 arrowStartPos = Vector3.Lerp(bezier[paramLine], bezier[paramLine+1], arrowTipParam * linesCount - paramLine);
         Vector3 arrowEndPos = Vector3.Lerp(bezier[endParamLine], bezier[(endParamLine+1)%bezier.Count], endPosParam * linesCount - endParamLine);
         
-        DrawArrowTip(arrowStartPos, (arrowEndPos - arrowStartPos).normalized, arrowTipSize, normal - Vector3.Project(normal, (arrowEndPos - arrowStartPos).normalized));
+        CustomGizmos.DrawArrowTip(arrowStartPos, (arrowEndPos - arrowStartPos).normalized, arrowTipSize, normal - Vector3.Project(normal, (arrowEndPos - arrowStartPos).normalized));
         
         List<Vector3> firstPartList = new List<Vector3>();
         
@@ -436,5 +431,6 @@ public class CustomGizmos2D
             Gizmos.DrawLine(p1, p2);
         }
     }
+    */
     
 }

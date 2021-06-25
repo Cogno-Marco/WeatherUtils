@@ -18,6 +18,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     [Header("Arrow Heap Params")]
     public float arrowHeadAmplitude = 1f;
     public float arrowHeadOffset = 1f;
+    public Vector2 arrowOffset;
     
     [Header("Lines Params")]
     public float linesAmplitude = 0.2f;
@@ -66,7 +67,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         
         //Draw all shapes        
         Arrow();
-        // ArrowHead();
+        ArrowHead();
         // Lines();
         // LineArrow();
         // HGizmo();
@@ -88,6 +89,8 @@ public class CustomGizmos2DTester : MonoBehaviour
         Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset);
         
         CustomGizmos2D.DrawArrow(arrowHeadPos, Vector3.down, 1f, arrowTipSize);
+        
+        CustomGizmos2D.DrawArrow(arrowOffset, lerpingParam * 2 * Mathf.PI, 1f, arrowTipSize);
     }
     
     /// <summary>
@@ -95,9 +98,8 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// </summary>
     private void ArrowHead(){
         Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset) + new Vector3(0.5f, 0, 0.5f);
-        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, Vector3.up) * Vector3.forward;
         
-        CustomGizmos.DrawArrowTip(arrowHeadPos, Vector3.down, arrowTipSize, currentDirection);
+        CustomGizmos2D.DrawArrowTip(arrowHeadPos, Vector3.down, arrowTipSize);
     }
     
     /// <summary>
