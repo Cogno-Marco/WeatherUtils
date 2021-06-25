@@ -104,52 +104,34 @@ public class CustomGizmos2D
         CustomGizmos.DrawLineArrow(startPos, endPos, tipSize, placementPercentage, Vector3.forward);
     }
     
-    /*
     /// <summary>
     /// Draws a rectangle with lines crossing it
     /// </summary>
     /// <param name="center">Center position of the rectangle</param>
-    /// <param name="widthDir">Direction of the width of the rectangle</param>
-    /// <param name="heightDir">Direction of the height of the rectangle</param>
     /// <param name="halfSides">Half-sizes of the edges</param>
     /// <param name="numbOfLines">How many lines cross the rectangle, 0 simply draws a square</param>
-    public static void DrawCrossedRect(Vector3 center, Vector3 widthDir, Vector3 heightDir, Vector2 halfSides, int numbOfLines){
-        widthDir = widthDir.normalized;
-        heightDir = heightDir.normalized;
-        Vector3 topLeftCorner = center - widthDir * halfSides.x + heightDir * halfSides.y;
-        Vector3 botRightCorner = center + widthDir * halfSides.x - heightDir * halfSides.y;
-        
-        //draws the rectangle
-        Gizmos.DrawLine(topLeftCorner,  topLeftCorner  + widthDir  * halfSides.x * 2);
-        Gizmos.DrawLine(topLeftCorner,  topLeftCorner  - heightDir * halfSides.y * 2);
-        Gizmos.DrawLine(botRightCorner, botRightCorner - widthDir  * halfSides.x * 2);
-        Gizmos.DrawLine(botRightCorner, botRightCorner + heightDir * halfSides.y * 2);
-        
-        Vector3 normal = Vector3.Cross(widthDir, heightDir);
-        Matrix4x4 transformMatrix = Matrix4x4.identity;
-        transformMatrix.SetTRS(center, Quaternion.LookRotation(heightDir, normal), Vector3.one);
-        Matrix4x4 inverseMatrix = transformMatrix.inverse;
-        
-        Vector3 cornerTL = transformMatrix.MultiplyPoint(topLeftCorner);
-        Vector3 cornerBR = transformMatrix.MultiplyPoint(botRightCorner);
-        Vector3 newHeightDir = transformMatrix.MultiplyVector(heightDir);
-        Vector3 newWidthDir = transformMatrix.MultiplyVector(widthDir);
-        
-        float step = 1f / (numbOfLines+1);
-        for(float i = step; i < 1; i += step){
-            Vector3 worldLineStart = Vector3.Lerp(topLeftCorner, botRightCorner, i);
-            Vector3 lineStart = transformMatrix.MultiplyPoint(worldLineStart);
-
-            //check which side the ray collides with first (between left and bottom)
-            Vector3 rayDir1 = transformMatrix.MultiplyVector((Quaternion.AngleAxis(45, normal) * widthDir).normalized);
-            
-            Vector3 position1 = GetFirst(cornerTL, newWidthDir, lineStart, rayDir1, cornerBR, newHeightDir);
-            Vector3 position2 = GetFirst(cornerTL, newHeightDir, lineStart, -rayDir1, cornerBR, newWidthDir);
-            
-            Gizmos.DrawLine(worldLineStart, inverseMatrix.MultiplyPoint(position1));
-            Gizmos.DrawLine(worldLineStart, inverseMatrix.MultiplyPoint(position2));
-        }
+    public static void DrawCrossedRect(Vector2 center, Vector2 halfSides, int numbOfLines){
+        CustomGizmos.DrawCrossedRect(center, Vector3.right, Vector3.up, halfSides, numbOfLines);
     }
+    
+    /// <summary>
+    /// Draws a rectangle with lines crossing it
+    /// </summary>
+    /// <param name="center">Center position of the rectangle</param>
+    /// <param name="rotation">Counter-clockise rotation of the rectangle (in radians)</param>
+    /// <param name="halfSides">Half-sizes of the edges</param>
+    /// <param name="numbOfLines">How many lines cross the rectangle, 0 simply draws a square</param>
+    public static void DrawCrossedRect(Vector2 center, float rotation, Vector2 halfSides, int numbOfLines){
+        CustomGizmos.DrawCrossedRect(
+            center, 
+            Quaternion.Euler(0, 0, rotation * Mathf.Rad2Deg) * Vector3.right,
+            Quaternion.Euler(0, 0, rotation * Mathf.Rad2Deg) * Vector3.up,
+            halfSides, numbOfLines
+        );
+    }
+    
+    /*
+    
     
     /// <summary>
     /// Returns the point of intersection between 2 rays

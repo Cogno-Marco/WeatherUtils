@@ -72,9 +72,9 @@ public class CustomGizmos2DTester : MonoBehaviour
         Lines();
         HGizmo();
         LineArrow();
+        Rectangle();
         // Bezier();
         // BezierArrow();
-        // Rectangle();
         // Polygons();
         // Circle();
         
@@ -129,6 +129,19 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawLineArrow(new Vector2(2, 0),  new Vector2(2, 1), arrowTipSize, (sinParam + 1) / 2);
     }
     
+    /// <summary>
+    /// Calculates and draws a rectangle
+    /// </summary>
+    private void Rectangle(){
+        float rectSinParam = Mathf.Sin(lerpingHalfParam * 2 * Mathf.PI);
+        float rectCosParam = Mathf.Cos(lerpingHalfParam * 2 * Mathf.PI);
+        Vector2 halfSizes = new Vector2(
+            1.5f * (rectSinParam * rectSizeAmplitude + (1 - rectSizeAmplitude)),
+            1    * (rectCosParam * rectSizeAmplitude + (1 - rectSizeAmplitude))
+        );
+        CustomGizmos2D.DrawCrossedRect(new Vector3(4,0,1.5f), sinParam, halfSizes, 5);
+    }
+    
     /*
     
     /// <summary>
@@ -154,18 +167,6 @@ public class CustomGizmos2DTester : MonoBehaviour
         
     }
     
-    /// <summary>
-    /// Calculates and draws a rectangle
-    /// </summary>
-    private void Rectangle(){
-        float rectSinParam = Mathf.Sin(lerpingHalfParam * 2 * Mathf.PI);
-        float rectCosParam = Mathf.Cos(lerpingHalfParam * 2 * Mathf.PI);
-        Vector2 halfSizes = new Vector2(
-            1.5f * (rectSinParam * rectSizeAmplitude + (1 - rectSizeAmplitude)),
-            1    * (rectCosParam * rectSizeAmplitude + (1 - rectSizeAmplitude))
-        );
-        CustomGizmos2D.DrawCrossedRect(new Vector3(4,0,1.5f), Vector3.forward, Vector3.right, halfSizes, 5);
-    }
     
     /// <summary>
     /// Draws regular polygons animation
