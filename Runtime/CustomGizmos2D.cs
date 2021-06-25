@@ -130,53 +130,34 @@ public class CustomGizmos2D
         );
     }
     
+    /// <summary>
+    /// Draws a regular n-sided poligon (triangle, square, pentagon and so on) given it's center, the direction and length of it's radius,
+    /// how many sides to draw and the normal direction to draw the poligon towards.
+    /// Can also be used to draw 2D circles by increasing the number of sides to draw to a really high number
+    /// </summary>
+    /// <param name="center">Center position of the polygon</param>
+    /// <param name="angle">Angle to draw the poligon towards</param>
+    /// <param name="radius">A positive radius of the circle which sircumscribes the polygon</param>
+    /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
+    /// <param name="normal">Perpendicular of the plane containing the circle</param>
+    public static void DrawRegularPoligon(Vector2 center, float angle, float radius, int sidesCount){
+        CustomGizmos.DrawRegularPoligon(center, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), radius, sidesCount, Vector3.forward);
+    }
+
+    /// <summary>
+    /// Draws a regular n-sided poligon (triangle, square, pentagon and so on) given it's center, the direction and length of it's radius,
+    /// how many sides to draw and the normal direction to draw the poligon towards.
+    /// Can also be used to draw 2D circles by increasing the number of sides to draw to a really high number
+    /// </summary>
+    /// <param name="center">Center position of the polygon</param>
+    /// <param name="endPos">Position of one of the poligon vertices</param>
+    /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
+    /// <param name="normal">Perpendicular of the plane containing the circle</param>
+    public static void DrawRegularPoligon(Vector2 center, Vector2 endPos, int sidesCount){
+        CustomGizmos.DrawRegularPoligon(center, endPos.normalized, endPos.magnitude, sidesCount, Vector3.forward);
+    }
+    
     /*
-    
-    
-    /// <summary>
-    /// Returns the point of intersection between 2 rays
-    /// </summary>
-    /// <param name="aPos">The start of the first ray</param>
-    /// <param name="aDir">The direction of the first ray</param>
-    /// <param name="bPos">The start of the second ray</param>
-    /// <param name="bDir">The direction of the second ray</param>
-    private static Vector3 GetIntersection(Vector3 aPos, Vector3 aDir, Vector3 bPos, Vector3 bDir){
-        return bPos + bDir * GetIntersectionParam(aPos, aDir, bPos, bDir);
-    }
-    
-    /// <summary>
-    /// Returns the intersection parameter u of the ray of the intersaction of 2 given rays
-    /// </summary>
-    /// <param name="aPos">The starting position of the first ray</param>
-    /// <param name="aDir">The direction of the first ray</param>
-    /// <param name="bPos">The starting position of the second ray</param>
-    /// <param name="bDir">The direction of the second ray</param>
-    private static float GetIntersectionParam(Vector3 aPos, Vector3 aDir, Vector3 bPos, Vector3 bDir){
-        
-        
-        float dx = aPos.x - bPos.x;
-        float dz = aPos.z - bPos.z;
-        float det = aDir.x * bDir.z - aDir.z * bDir.x;
-        float u = (dz * aDir.x - dx * aDir.z) / det;
-        return u;
-    }
-    
-    /// <summary>
-    /// Returns the first point of intersection between 3 rays
-    /// </summary>
-    /// <param name="aPos">The starting position of the first ray</param>
-    /// <param name="aDir">The direction of the first ray</param>
-    /// <param name="bPos">The starting position of the second ray</param>
-    /// <param name="bDir">The direction of the second ray</param>
-    /// <param name="cPos">The starting position of the third ray</param>
-    /// <param name="cDir">The direction of the third ray</param>
-    private static Vector3 GetFirst(Vector3 aPos, Vector3 aDir, Vector3 bPos, Vector3 bDir, Vector3 cPos, Vector3 cDir){
-        return bPos + bDir * Mathf.Min(
-            GetIntersectionParam(aPos, aDir, bPos, bDir),
-            GetIntersectionParam(cPos, cDir, bPos, bDir)
-        );
-    }
-    
     /// <summary>
     /// Draws a Bézier curve using three points
     /// </summary>
@@ -369,31 +350,7 @@ public class CustomGizmos2D
     }
     
 
-    /// <summary>
-    /// Draws a regular poligon (triangle, square, pentagon and so on) given it's center, the direction and length of it's radius,
-    /// how many sides to draw and the normal direction to draw the poligon towards.
-    /// Can also be used to draw 2D circles by increasing the number of sides to draw
-    /// </summary>
-    /// <param name="center">Center position of the polygon</param>
-    /// <param name="direction">Direction towards the first point of the polygon</param>
-    /// <param name="radius">A positive radius of the circle which sircumscribes the polygon</param>
-    /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
-    /// <param name="normal">Perpendicular of the plane containing the circle</param>
-    public static void DrawRegularPoligon(Vector3 center, Vector3 direction, float radius, int sidesCount, Vector3 normal){
-        if(sidesCount < 3){
-            Debug.LogWarning("Attempted to draw a polygon with less than 3 sides");
-            return;
-        }
-        Vector3 rightDir = direction.normalized;
-        Vector3 upDir = Vector3.Cross(rightDir, normal.normalized).normalized;
-        
-        for(int i = 0; i < sidesCount; i++){
-            float angleStep = 2f * Mathf.PI / sidesCount;
-            Vector3 p1 = center + radius * rightDir * Mathf.Cos(angleStep * i)       + radius * upDir * Mathf.Sin(angleStep * i);
-            Vector3 p2 = center + radius * rightDir * Mathf.Cos(angleStep * (i + 1)) + radius * upDir * Mathf.Sin(angleStep * (i + 1));
-            Gizmos.DrawLine(p1, p2);
-        }
-    }
+    
     */
     
 }

@@ -73,9 +73,9 @@ public class CustomGizmos2DTester : MonoBehaviour
         HGizmo();
         LineArrow();
         Rectangle();
+        Polygons();
         // Bezier();
         // BezierArrow();
-        // Polygons();
         // Circle();
         
         //reset params
@@ -142,6 +142,15 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawCrossedRect(new Vector3(4,0,1.5f), sinParam, halfSizes, 5);
     }
     
+    /// <summary>
+    /// Draws regular polygons animation
+    /// </summary>
+    private void Polygons(){
+        int sidesCount = 3 + (int)(sidesCountAmplitude * (sinParam + 1) / 2);
+        Vector3 currentDirection = Quaternion.Euler(0, 0, doubleSinParam * normalAmplitude) * Vector3.right;
+        CustomGizmos2D.DrawRegularPoligon(new Vector2(4, 2.3f), currentDirection * polygonsRadius, sidesCount);
+    }
+    
     /*
     
     /// <summary>
@@ -168,14 +177,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     }
     
     
-    /// <summary>
-    /// Draws regular polygons animation
-    /// </summary>
-    private void Polygons(){
-        int sidesCount = 3 + (int)(sidesCountAmplitude * (sinParam + 1) / 2);
-        Vector3 currentDirection = Quaternion.AngleAxis(doubleSinParam * normalAmplitude, new Vector3(-1,0,1).normalized) * Vector3.up;
-        CustomGizmos2D.DrawRegularPoligon(new Vector3(6,0,2) + Vector3.right * sinParam * positionAmplitude, Vector3.right, polygonsRadius, sidesCount, currentDirection);
-    }
+    
     
     /// <summary>
     /// Draws a rotating circle
