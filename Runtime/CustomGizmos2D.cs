@@ -88,7 +88,6 @@ public class CustomGizmos2D
         CustomGizmos.DrawH(startPos, endPos, lineSize, Vector3.forward);
     }
     
-    /*
     /// <summary>
     /// Draws a line with an embedded arrow in the middle
     /// </summary>
@@ -101,18 +100,11 @@ public class CustomGizmos2D
     /// 1 means the arrow tip is at the end of the line (equal to calling DrawArrow)
     /// a value between 0 and 1 means the arror tip is inbetween startPos and endPos
     /// </param>
-    /// <param name="normal">Normal vector of the arrow tip, used to orient the arrow in a custom direction</param>
-    public static void DrawLineArrow(Vector3 startPos, Vector3 endPos, float tipSize, float placementPercentage, Vector3 normal){
-        float lineLength = (endPos - startPos).magnitude;
-        placementPercentage *= (1 - tipSize / lineLength);
-        Vector3 offset = endPos - startPos;
-        Vector3 tipMaxPos = startPos + offset.normalized * (offset.magnitude - tipSize);
-        Vector3 currentTipPos = Vector3.Lerp(startPos, tipMaxPos, placementPercentage);
-        CustomGizmos.DrawArrowTip(currentTipPos, offset.normalized, tipSize, normal);
-        Gizmos.DrawLine(startPos, currentTipPos);
-        DrawLine(currentTipPos + offset.normalized * tipSize, endPos, tipSize / 2, 0);
+    public static void DrawLineArrow(Vector3 startPos, Vector3 endPos, float tipSize, float placementPercentage){
+        CustomGizmos.DrawLineArrow(startPos, endPos, tipSize, placementPercentage, Vector3.forward);
     }
     
+    /*
     /// <summary>
     /// Draws a rectangle with lines crossing it
     /// </summary>
