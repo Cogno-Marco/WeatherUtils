@@ -75,7 +75,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         Rectangle();
         Polygons();
         Circle();
-        // Bezier();
+        Bezier();
         // BezierArrow();
         
         //reset params
@@ -158,16 +158,15 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawRegularPoligon(new Vector2(6, 2), Vector3.right * circleRadius * sinParam, 30);
     }
     
-    /*
-    
     /// <summary>
     /// Calculates and draws bezier curves
     /// </summary>
     private void Bezier(){
-        CustomGizmos2D.Bezier(new Vector3(1,0,2), new Vector3(.5f,0,3), new Vector3(0,0,2), 10);
-        CustomGizmos2D.CubicBezier(new Vector3(1,0,3), new Vector3(.5f,0,4), new Vector3(0,0,3), new Vector3(-1, 0, 4), 10);
+        CustomGizmos2D.Bezier(new Vector3(7, 0), new Vector3(6.5f, 1), new Vector3(6, 0), 10);
+        CustomGizmos2D.CubicBezier(new Vector2(1, 3), new Vector2(.5f, 4), new Vector2(0, 3), new Vector2(-1, 4), 10);
     }
     
+    /*
     /// <summary>
     /// Calculates and draws a bezier curve with arrow
     /// </summary>
