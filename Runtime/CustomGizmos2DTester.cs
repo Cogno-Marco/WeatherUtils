@@ -74,9 +74,9 @@ public class CustomGizmos2DTester : MonoBehaviour
         LineArrow();
         Rectangle();
         Polygons();
+        Circle();
         // Bezier();
         // BezierArrow();
-        // Circle();
         
         //reset params
         MemoryReset();
@@ -151,6 +151,13 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawRegularPoligon(new Vector2(4, 2.3f), currentDirection * polygonsRadius, sidesCount);
     }
     
+    /// <summary>
+    /// Draws a rotating circle
+    /// </summary>
+    private void Circle(){
+        CustomGizmos2D.DrawRegularPoligon(new Vector2(6, 2), Vector3.right * circleRadius * sinParam, 30);
+    }
+    
     /*
     
     /// <summary>
@@ -179,13 +186,6 @@ public class CustomGizmos2DTester : MonoBehaviour
     
     
     
-    /// <summary>
-    /// Draws a rotating circle
-    /// </summary>
-    private void Circle(){
-        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, new Vector3(-1,0,1).normalized) * Vector3.up;
-        CustomGizmos2D.DrawRegularPoligon(new Vector3(5,0,4), Vector3.right, circleRadius, 30, currentDirection);
-    }
     */
     
     
