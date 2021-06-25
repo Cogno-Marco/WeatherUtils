@@ -76,7 +76,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         Polygons();
         Circle();
         Bezier();
-        // BezierArrow();
+        BezierArrow();
         
         //reset params
         MemoryReset();
@@ -166,24 +166,19 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.CubicBezier(new Vector2(1, 3), new Vector2(.5f, 4), new Vector2(0, 3), new Vector2(-1, 4), 10);
     }
     
-    /*
     /// <summary>
     /// Calculates and draws a bezier curve with arrow
     /// </summary>
     private void BezierArrow(){
-        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, new Vector3(-1,0,1).normalized) * Vector3.up;
-        List<Vector3> bezierPoints = new List<Vector3>();
-        bezierPoints.Add(new Vector3(3,0,4));
-        bezierPoints.Add(new Vector3(1,0,4));
-        bezierPoints.Add(new Vector3(2,0,5));
-        bezierPoints.Add(new Vector3(0,0,5));
+        List<Vector2> bezierPoints = new List<Vector2>();
+        bezierPoints.Add(new Vector2(3, 4));
+        bezierPoints.Add(new Vector2(1, 4));
+        bezierPoints.Add(new Vector2(2, 5));
+        bezierPoints.Add(new Vector2(0, 5));
         float bezSinParam = Mathf.Sin(lerpingHalfParam * 2 * Mathf.PI);
-        CustomGizmos2D.BezierWithArrow(bezierPoints, 10, (bezSinParam + 1) / 2, arrowTipSize, currentDirection);
+        CustomGizmos2D.BezierWithArrow(bezierPoints, 10, (bezSinParam + 1) / 2, arrowTipSize);
         
     }
-    
-    */
-    
     
     /// <summary>
     /// Resets memory footprint for bezier if necessary

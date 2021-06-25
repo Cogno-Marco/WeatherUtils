@@ -139,7 +139,6 @@ public class CustomGizmos2D
     /// <param name="angle">Angle to draw the poligon towards</param>
     /// <param name="radius">A positive radius of the circle which sircumscribes the polygon</param>
     /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
-    /// <param name="normal">Perpendicular of the plane containing the circle</param>
     public static void DrawRegularPoligon(Vector2 center, float angle, float radius, int sidesCount){
         CustomGizmos.DrawRegularPoligon(center, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), radius, sidesCount, Vector3.forward);
     }
@@ -152,7 +151,6 @@ public class CustomGizmos2D
     /// <param name="center">Center position of the polygon</param>
     /// <param name="endPos">Position of one of the poligon vertices</param>
     /// <param name="sidesCount">How many sides to draw. Must be >= 3 (use a line for a 2 sided polygon and a point for a 1 sided poligon)</param>
-    /// <param name="normal">Perpendicular of the plane containing the circle</param>
     public static void DrawRegularPoligon(Vector2 center, Vector2 endPos, int sidesCount){
         CustomGizmos.DrawRegularPoligon(center, endPos.normalized, endPos.magnitude, sidesCount, Vector3.forward);
     }
@@ -207,7 +205,6 @@ public class CustomGizmos2D
         CustomGizmos.ResetBezierMemory();
     }
     
-    /*
     
     /// <summary>
     /// Draws a bezier curve with a arrow tip inside the curve
@@ -216,51 +213,9 @@ public class CustomGizmos2D
     /// <param name="resolution">how many lines to draw</param>
     /// <param name="arrowTipParam">A value between 0 and 1 (included), lerps the arrow at the given percentage of the curve</param>
     /// <param name="arrowTipSize">The size of the arrow tip</param>
-    /// <param name="normal">Normal vector of the arrow tip, used to orient the arrow in a custom direction</param>
-    public static void BezierWithArrow(List<Vector3> points, int resolution, float arrowTipParam, float arrowTipSize, Vector3 normal){
-        List<Vector3> bezier = GeneralBezier(points, resolution);
-        float bezierCurveLength = 0;
-        for(int i = 0; i < bezier.Count-1; i++){
-            bezierCurveLength += (bezier[i+1] - bezier[i]).magnitude;
-        }
-
-        arrowTipParam *= (1 - 2f * arrowTipSize / bezierCurveLength);
-        int linesCount = bezier.Count - 1;
-        int paramLine = (int)(arrowTipParam * linesCount);
-        
-        float endPosParam = arrowTipParam + 2f * arrowTipSize / bezierCurveLength;
-        int endParamLine = (int)(endPosParam * linesCount);
-        
-        Vector3 arrowStartPos = Vector3.Lerp(bezier[paramLine], bezier[paramLine+1], arrowTipParam * linesCount - paramLine);
-        Vector3 arrowEndPos = Vector3.Lerp(bezier[endParamLine], bezier[(endParamLine+1)%bezier.Count], endPosParam * linesCount - endParamLine);
-        
-        CustomGizmos.DrawArrowTip(arrowStartPos, (arrowEndPos - arrowStartPos).normalized, arrowTipSize, normal - Vector3.Project(normal, (arrowEndPos - arrowStartPos).normalized));
-        
-        List<Vector3> firstPartList = new List<Vector3>();
-        
-        for(int i = 0; i <= paramLine; i++){
-            Vector3 point = bezier[i];
-            firstPartList.Add(point);
-        }
-        
-        firstPartList.Add(arrowStartPos);
-        
-        for(int i = 0; i < firstPartList.Count - 1; i++){
-            Gizmos.DrawLine(firstPartList[i], firstPartList[i+1]);
-        }
-        
-        List<Vector3> secondPartList = new List<Vector3>();
-        secondPartList.Add(arrowEndPos);
-        for(int i = endParamLine+1; i < bezier.Count; i++){
-            Vector3 point = bezier[i];
-            secondPartList.Add(bezier[i]);
-        }
-        
-        for(int i = 0; i < secondPartList.Count - 1; i++){
-            Gizmos.DrawLine(secondPartList[i], secondPartList[i+1]);
-        }
+    public static void BezierWithArrow(List<Vector2> points, int resolution, float arrowTipParam, float arrowTipSize){
+        List<Vector3> points3D = new List<Vector3>();
+        foreach(Vector2 p in points) points3D.Add((Vector3)p);
+        CustomGizmos.BezierWithArrow(points3D, resolution, arrowTipParam, arrowTipSize, Vector3.forward);
     }
-    
-    */
-    
 }
