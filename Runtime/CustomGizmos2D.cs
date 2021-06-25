@@ -200,15 +200,14 @@ public class CustomGizmos2D
         CustomGizmos.Bezier(list, resolution);
     }
     
-    /*
-    private static Dictionary<string, List<Vector3>> bezierMap = new Dictionary<string, List<Vector3>>();
-    
     /// <summary>
     /// Resets the bezier dinamic memory
     /// </summary>
     public static void ResetBezierMemory(){
-        bezierMap.Clear();
+        CustomGizmos.ResetBezierMemory();
     }
+    
+    /*
     
     /// <summary>
     /// Draws a bezier curve with a arrow tip inside the curve

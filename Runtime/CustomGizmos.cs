@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CustomGizmos
 {
+    private static Dictionary<string, List<Vector3>> bezierMap = new Dictionary<string, List<Vector3>>();
+    
     /// <summary>
     /// Draws a gizmo arrow at startPos pointing at endPos
     /// </summary>
@@ -241,9 +243,7 @@ public class CustomGizmos
             Gizmos.DrawLine(toDraw[i], toDraw[i+1]);
         }
     }
-    
-    private static Dictionary<string, List<Vector3>> bezierMap = new Dictionary<string, List<Vector3>>();
-    
+        
     /// <summary>
     /// Returns a list with the points of the bezier curve
     /// </summary>

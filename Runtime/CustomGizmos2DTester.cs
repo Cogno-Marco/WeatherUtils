@@ -182,9 +182,6 @@ public class CustomGizmos2DTester : MonoBehaviour
         
     }
     
-    
-    
-    
     */
     
     
@@ -194,7 +191,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     private void MemoryReset(){
         if(resetMemory){
             resetMemory = false;
-            //CustomGizmos2D.ResetBezierMemory();
+            CustomGizmos2D.ResetBezierMemory();
         }
     }
 }
