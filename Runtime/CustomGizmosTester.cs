@@ -39,12 +39,12 @@ public class CustomGizmosTester : MonoBehaviour
     public float circleRadius = 2f;
     
     
-    private float currentAngle;
+    [ReadOnly] public float currentAngle;
     private float lerpingParam;
     private float lerpingHalfParam;
     private float editorDeltaTime;
     private float lastEditorTime;
-    private float sinParam;
+    [Graph] public float sinParam;
     private float doubleSinParam;
     
     private void OnDrawGizmos() {

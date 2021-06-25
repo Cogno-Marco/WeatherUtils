@@ -1,7 +1,9 @@
 {
-    "name": "Weatherlight.WeatherUtils",
+    "name": "Weatherlight.WeatherUtils.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:600250a9a779a7646b2b3b0744b0ce6d"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
