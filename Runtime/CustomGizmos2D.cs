@@ -78,27 +78,17 @@ public class CustomGizmos2D
         CustomGizmos.DrawLine(startPos, endPos, startSpacing, endSpacing);
     }
     
-    /*
-    
     /// <summary>
     /// Draws a H shaped gizmo
     /// </summary>
     /// <param name="startPos">Starting position of the H</param>
     /// <param name="endPos">Ending position of the H</param>
     /// <param name="lineSize">How big are the H sides</param>
-    /// <param name="normal">The normal vector of the H sides, used to orient the H sides in a custom direction</oaram>
-    public static void DrawH(Vector3 startPos, Vector3 endPos, float lineSize, Vector3 normal){
-        Vector3 lineDir = (endPos - startPos).normalized;
-        
-        Vector3 tipStartA = startPos + Quaternion.AngleAxis(-90, normal) * lineDir * -lineSize;
-        Vector3 tipEndA = startPos + Quaternion.AngleAxis(+90, normal) * lineDir * -lineSize;
-        Vector3 tipStartB = endPos + Quaternion.AngleAxis(-90, normal) * lineDir * -lineSize;
-        Vector3 tipEndB = endPos + Quaternion.AngleAxis(+90, normal) * lineDir * -lineSize;
-        Gizmos.DrawLine(startPos, endPos);
-        Gizmos.DrawLine(tipStartA, tipEndA);
-        Gizmos.DrawLine(tipStartB, tipEndB);
+    public static void DrawH(Vector3 startPos, Vector3 endPos, float lineSize){
+        CustomGizmos.DrawH(startPos, endPos, lineSize, Vector3.forward);
     }
     
+    /*
     /// <summary>
     /// Draws a line with an embedded arrow in the middle
     /// </summary>

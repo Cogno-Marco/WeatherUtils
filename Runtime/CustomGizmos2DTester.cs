@@ -70,8 +70,8 @@ public class CustomGizmos2DTester : MonoBehaviour
         Arrow();
         ArrowHead();
         Lines();
+        HGizmo();
         // LineArrow();
-        // HGizmo();
         // Bezier();
         // BezierArrow();
         // Rectangle();
@@ -115,6 +115,12 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawLine(new Vector2(1.4f, 0), new Vector2(1.4f, 1), 0, 1 - sinParam * linesAmplitude - linesOffset);
     }
     
+    /// <summary>
+    /// Calculates and draws an H gizmo
+    /// </summary>
+    private void HGizmo(){
+        CustomGizmos2D.DrawH(new Vector2(2, 2), new Vector2(3, 2 + sinParam), arrowTipSize);
+    }
     
     /*
     
@@ -127,13 +133,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         CustomGizmos2D.DrawLineArrow(new Vector3(2,0,0),  new Vector3(2, 0, 1), arrowTipSize, (sinParam + 1) / 2, currentDirection);
     }
     
-    /// <summary>
-    /// Calculates and draws an H gizmo
-    /// </summary>
-    private void HGizmo(){
-        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, Vector3.forward) * Vector3.up;
-        CustomGizmos2D.DrawH(new Vector3(2,0,2), new Vector3(2,0,3), arrowTipSize, currentDirection);
-    }
+    
     
     /// <summary>
     /// Calculates and draws bezier curves
