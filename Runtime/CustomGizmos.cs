@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using System.Linq;
 
 public class CustomGizmos
 {
-    private static Dictionary<(Vector3[], int), List<Vector3>> bezierMap = new Dictionary<(Vector3[], int), List<Vector3>>();
+    private static Dictionary<BezierKeyPoints, Vector3[]> bezierMap = new Dictionary<BezierKeyPoints, Vector3[]>();
     
     /// <summary>
     /// Draws a gizmo arrow at startPos pointing at endPos
@@ -239,7 +240,7 @@ public class CustomGizmos
     /// <param name="resolution">How many lines to draw, used to change resolution, must be >= 0 </param>
     public static void Bezier(List<Vector3> points, int resolution){
         if(points.Count < 2) throw new System.ArgumentException("there must be at least 2 points to work!");
-        List<Vector3> toDraw = GeneralBezier(points.ToArray(), resolution);
+        List<Vector3> toDraw = new List<Vector3>(GeneralBezier(points.ToArray(), resolution));
         for(int i = 0; i < toDraw.Count-1; i++){
             Gizmos.DrawLine(toDraw[i], toDraw[i+1]);
         }
@@ -251,16 +252,16 @@ public class CustomGizmos
     /// <param name="points">The list of points to draw, must not be null and must be >= 2 in length</param>
     /// <param name="resolution">How many lines to draw, used to change resolution, must be >= 0 </param>
     /// <returns>Returns a list of points: the points interpolated in the bezier curve</returns>
-    private static List<Vector3> GeneralBezier(Vector3[] points, int resolution){
+    private static Vector3[] GeneralBezier(Vector3[] points, int resolution){
         if(points.Length < 2) throw new System.ArgumentException("there must be at least 2 points to work!");
-        //base case
         
+        //base cases
         if(bezierMap.ContainsKey((points, resolution)))
             return bezierMap[(points, resolution)];
         
         if(points.Length == 2){
-            List<Vector3> linearBez = LinearBezier(points[0], points[1], resolution);
-            return linearBez;
+            bezierMap.Add((points, resolution), LinearBezier(points[0], points[1], resolution));
+            return bezierMap[(points, resolution)];
         }
         
         //recursive case
@@ -274,34 +275,16 @@ public class CustomGizmos
         }
         
         //recursive call itself to get intermediate points
-        List<Vector3> interm1;
-        List<Vector3> interm2;
-        
-        if(bezierMap.ContainsKey((arr1, resolution))){
-            interm1 = bezierMap[(arr1, resolution)];
-        }
-        else{
-            List<Vector3> bez = GeneralBezier(arr1, resolution);
-            bezierMap.Add((arr1, resolution), bez);
-            interm1 = bez;
-        }
-        
-        if(bezierMap.ContainsKey((arr2, resolution))){
-            interm2 = bezierMap[(arr2, resolution)];
-        }
-        else{
-            List<Vector3> bez = GeneralBezier(arr2, resolution);
-            bezierMap.Add((arr2, resolution), bez);
-            interm2 = bez;
-        }
+        Vector3[] interm1 = GeneralBezier(arr1, resolution);
+        Vector3[] interm2 = GeneralBezier(arr2, resolution);
         
         //final lerp these 2 curves
         float step = 1f / resolution;
-        List<Vector3> output = new List<Vector3>();
-        for(int i = 0; i < interm1.Count; i++){
-            Vector3 final = Vector3.Lerp(interm1[i], interm2[i], step * i);
-            output.Add(final);
+        Vector3[] output = new Vector3[interm1.Length];
+        for(int i = 0; i < interm1.Length; i++){
+            output[i] = Vector3.Lerp(interm1[i], interm2[i], step * i);
         }
+        bezierMap.Add((points, resolution), output);
         return output;
     }
     
@@ -310,6 +293,7 @@ public class CustomGizmos
     /// </summary>
     public static void ResetBezierMemory(){
         bezierMap.Clear();
+        Debug.Log("Memory Cleaned");
     }
     
     /// <summary>
@@ -319,12 +303,12 @@ public class CustomGizmos
     /// <param name="bPos">The ending position of the bezier curve</param>
     /// <param name="resolution">how many lines to draw</param>
     /// <returns>Returns a list of points: the points interpolated in the bezier curve</returns>
-    private static List<Vector3> LinearBezier(Vector3 aPos, Vector3 bPos, int resolution){
-        List<Vector3> output = new List<Vector3>();
+    private static Vector3[] LinearBezier(Vector3 aPos, Vector3 bPos, int resolution){
+        Vector3[] output = new Vector3[resolution + 1];
         for(int i = 0; i <= resolution; i++){
-            Vector3 final = Vector3.Lerp(aPos, bPos, (float)(i) / resolution);
-            output.Add(final);
+            output[i] = Vector3.Lerp(aPos, bPos, (float)(i) / resolution);
         }
+        //since I'm here the linear version was calculated, add to dict (if there was I wouldn't be here)
         return output;
     }
     
@@ -337,7 +321,7 @@ public class CustomGizmos
     /// <param name="arrowTipSize">The size of the arrow tip</param>
     /// <param name="normal">Normal vector of the arrow tip, used to orient the arrow in a custom direction</param>
     public static void BezierWithArrow(List<Vector3> points, int resolution, float arrowTipParam, float arrowTipSize, Vector3 normal){
-        List<Vector3> bezier = GeneralBezier(points.ToArray(), resolution);
+        List<Vector3> bezier = new List<Vector3>(GeneralBezier(points.ToArray(), resolution));
         float bezierCurveLength = 0;
         for(int i = 0; i < bezier.Count-1; i++){
             bezierCurveLength += (bezier[i+1] - bezier[i]).magnitude;
@@ -404,6 +388,50 @@ public class CustomGizmos
             Vector3 p1 = center + radius * rightDir * Mathf.Cos(angleStep * i)       + radius * upDir * Mathf.Sin(angleStep * i);
             Vector3 p2 = center + radius * rightDir * Mathf.Cos(angleStep * (i + 1)) + radius * upDir * Mathf.Sin(angleStep * (i + 1));
             Gizmos.DrawLine(p1, p2);
+        }
+    }
+
+
+    private struct BezierKeyPoints
+    {
+        public Vector3[] keyPoints;
+        public int resolution;
+
+        public BezierKeyPoints(Vector3[] keyPoints, int resolution)
+        {
+            this.keyPoints = keyPoints;
+            this.resolution = resolution;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is BezierKeyPoints other && resolution == other.resolution &&
+                keyPoints.SequenceEqual(other.keyPoints);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1030903623;
+            foreach (Vector3 item in keyPoints)
+                hashCode = hashCode * -1521134295 + item.GetHashCode();
+            hashCode = hashCode * -1521134295 + resolution.GetHashCode();
+            return hashCode;
+        }
+
+        public void Deconstruct(out Vector3[] item1, out int item2)
+        {
+            item1 = keyPoints;
+            item2 = resolution;
+        }
+
+        public static implicit operator (Vector3[], int)(BezierKeyPoints value)
+        {
+            return (value.keyPoints, value.resolution);
+        }
+
+        public static implicit operator BezierKeyPoints((Vector3[], int) value)
+        {
+            return new BezierKeyPoints(value.Item1, value.Item2);
         }
     }
     
