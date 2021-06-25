@@ -1,12 +1,12 @@
 # WeatherUtils
 
-A Weatherlight custom made package with useful development tools for anyone!
+A Weatherlight custom made package with useful bite-sized development tools for anyone!
 
-This package includes some major or minor tools that we often use to develop our games. You can see them and how they work in the following sections!
+This package includes some minor utility tools that we often use to develop our games. You can see them and how they work in the following sections.
 
 # Downloading and using
 To use this package inside Unity simply open `Window > Package Manager`, on the window that appears click the "+" icon and select "Add Package from git URL...", then paste the link you get from this repository (https://github.com/Cogno-Marco/WeatherUtils.git) and Unity will do the rest!
-When Unity has downloaded and included this package you can directly use it (see next sections for tools found in the package and how to use them)
+When Unity has downloaded and included this package you can directly use it (see next sections for tools found in the package and how to use them).
 
 # Bezier Curves
 A collection of efficient bezier curves implementations
@@ -34,8 +34,8 @@ You can see them here:
 ![](Documentation/GizmoLibrary.gif)
 
 ### Usage
-These gizmos only work in `OnDrawGizmos` and `onDrawGizmosSelected` Unity function.
-Simply define a color and use them like this
+These gizmos only work inside `OnDrawGizmos` and `onDrawGizmosSelected` Unity functions.
+Simply setup a color and use them like this:
 ```CSharp
 private void OnDrawGizmos(){
     Gizmos.Color = Color.green;
@@ -47,7 +47,7 @@ You can see documentation on each function in the `CustomGizmos.cs` file and a u
 
 # Contributing
 Contributions on this repository are accepted!
-To properly contribute:
+To contribute:
 1. Create a new empty Unity project
 2. Navigate to the Unity project folder
 3. Enter the `Packages` folder
