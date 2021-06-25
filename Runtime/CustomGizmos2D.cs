@@ -50,12 +50,10 @@ public class CustomGizmos2D
     /// <param name="position">The position to place the arrow tip</param>
     /// <param name="direction">The direction of the tip</param>
     /// <param name="size">The size of the arrow tip</param>
-    public static void DrawArrowTip(Vector3 position, Vector3 direction, float size){
+    public static void DrawArrowTip(Vector2 position, Vector2 direction, float size){
         CustomGizmos.DrawArrowTip(position, direction, size, Vector3.forward);
     }
     
-    
-    /*
     /// <summary>
     /// Draws a line with empty space at the end and at the start
     /// </summary>
@@ -65,10 +63,10 @@ public class CustomGizmos2D
     /// The spacing to have both at the start and end of the line, symmetric.
     /// A value of 0 will draw a line equal to Gizmos.DrawLine, meaning with no empty space
     /// </param>
-    public static void DrawLine(Vector3 startPos, Vector3 endPos, float spacing){
-        DrawLine(startPos, endPos, spacing, spacing);
+    public static void DrawLine(Vector2 startPos, Vector2 endPos, float spacing){
+        CustomGizmos.DrawLine(startPos, endPos, spacing);
     }
-
+    
     /// <summary>
     /// Draws a line with empty space at the end and at the start, not simmetric.
     /// </summary>
@@ -76,10 +74,11 @@ public class CustomGizmos2D
     /// <param name="endPos">The ending pos of the line</param>
     /// <param name="startSpacing">How much empty space to have at the start of the line</param>
     /// <param name="endSpacing">How much empty space to have at the end of the line</param>    
-    public static void DrawLine(Vector3 startPos, Vector3 endPos, float startSpacing, float endSpacing){
-        Vector3 lineDir = (endPos - startPos).normalized;
-        Gizmos.DrawLine(startPos + lineDir * startSpacing, endPos - lineDir * endSpacing);
+    public static void DrawLine(Vector2 startPos, Vector2 endPos, float startSpacing, float endSpacing){
+        CustomGizmos.DrawLine(startPos, endPos, startSpacing, endSpacing);
     }
+    
+    /*
     
     /// <summary>
     /// Draws a H shaped gizmo

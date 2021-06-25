@@ -5,7 +5,7 @@ using UnityEngine;
 public class CustomGizmos2DTester : MonoBehaviour
 {
     public float arrowTipSize = 0.2f;
-    [Range(0f,1f)]
+    [Range(0f, 1f)]
     public float lerpParam = 0.5f;
     
     [Range(0, 100)]
@@ -31,12 +31,12 @@ public class CustomGizmos2DTester : MonoBehaviour
     public float sidesCountAmplitude = 5f;
     [Range(0f, 60f)]
     public float normalAmplitude = 1f;
-    [Range(0f,2f)]
+    [Range(0f, 2f)]
     public float polygonsRadius = 2f;
     public float positionAmplitude = 0.5f;
     
     [Header("Circle Params")]
-    [Range(0f,2f)]
+    [Range(0f, 2f)]
     public float circleRadius = 2f;
     
     
@@ -48,7 +48,8 @@ public class CustomGizmos2DTester : MonoBehaviour
     [Graph] public float sinParam;
     private float doubleSinParam;
     
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         //calculate editor time
         Gizmos.color = Color.green;
         float currentTime = Time.realtimeSinceStartup;
@@ -68,7 +69,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         //Draw all shapes        
         Arrow();
         ArrowHead();
-        // Lines();
+        Lines();
         // LineArrow();
         // HGizmo();
         // Bezier();
@@ -85,7 +86,8 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// <summary>
     /// Calculates and draws arrow
     /// </summary>
-    private void Arrow(){
+    private void Arrow()
+    {
         Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset);
         
         CustomGizmos2D.DrawArrow(arrowHeadPos, Vector3.down, 1f, arrowTipSize);
@@ -96,7 +98,8 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// <summary>
     /// Calculates arrow head position and draws it
     /// </summary>
-    private void ArrowHead(){
+    private void ArrowHead()
+    {
         Vector3 arrowHeadPos = Vector3.up * (sinParam * arrowHeadAmplitude + arrowHeadOffset) + new Vector3(0.5f, 0, 0.5f);
         
         CustomGizmos2D.DrawArrowTip(arrowHeadPos, Vector3.down, arrowTipSize);
@@ -105,11 +108,15 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// <summary>
     /// Calculates lines positions and draws them
     /// </summary>
-    private void Lines(){
-        CustomGizmos.DrawLine(new Vector3(1f,0,0), new Vector3(1f,0,1), 1f - sinParam * linesAmplitude - linesOffset, 0);
-        CustomGizmos.DrawLine(new Vector3(1.2f,0,0), new Vector3(1.2f,0,1), sinParam * linesAmplitude + linesOffset);
-        CustomGizmos.DrawLine(new Vector3(1.4f,0,0), new Vector3(1.4f,0,1), 0, 1 - sinParam * linesAmplitude - linesOffset);
+    private void Lines()
+    {
+        CustomGizmos2D.DrawLine(new Vector2(1f,   0), new Vector2(1f,   1), 1f - sinParam * linesAmplitude - linesOffset, 0);
+        CustomGizmos2D.DrawLine(new Vector2(1.2f, 0), new Vector2(1.2f, 1), sinParam * linesAmplitude + linesOffset);
+        CustomGizmos2D.DrawLine(new Vector2(1.4f, 0), new Vector2(1.4f, 1), 0, 1 - sinParam * linesAmplitude - linesOffset);
     }
+    
+    
+    /*
     
     /// <summary>
     /// Calculates and draws line arrows
@@ -117,7 +124,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     private void LineArrow(){
         Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, Vector3.forward) * Vector3.up;
         
-        CustomGizmos.DrawLineArrow(new Vector3(2,0,0),  new Vector3(2, 0, 1), arrowTipSize, (sinParam + 1) / 2, currentDirection);
+        CustomGizmos2D.DrawLineArrow(new Vector3(2,0,0),  new Vector3(2, 0, 1), arrowTipSize, (sinParam + 1) / 2, currentDirection);
     }
     
     /// <summary>
@@ -125,15 +132,15 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// </summary>
     private void HGizmo(){
         Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, Vector3.forward) * Vector3.up;
-        CustomGizmos.DrawH(new Vector3(2,0,2), new Vector3(2,0,3), arrowTipSize, currentDirection);
+        CustomGizmos2D.DrawH(new Vector3(2,0,2), new Vector3(2,0,3), arrowTipSize, currentDirection);
     }
     
     /// <summary>
     /// Calculates and draws bezier curves
     /// </summary>
     private void Bezier(){
-        CustomGizmos.Bezier(new Vector3(1,0,2), new Vector3(.5f,0,3), new Vector3(0,0,2), 10);
-        CustomGizmos.CubicBezier(new Vector3(1,0,3), new Vector3(.5f,0,4), new Vector3(0,0,3), new Vector3(-1, 0, 4), 10);
+        CustomGizmos2D.Bezier(new Vector3(1,0,2), new Vector3(.5f,0,3), new Vector3(0,0,2), 10);
+        CustomGizmos2D.CubicBezier(new Vector3(1,0,3), new Vector3(.5f,0,4), new Vector3(0,0,3), new Vector3(-1, 0, 4), 10);
     }
     
     /// <summary>
@@ -147,7 +154,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         bezierPoints.Add(new Vector3(2,0,5));
         bezierPoints.Add(new Vector3(0,0,5));
         float bezSinParam = Mathf.Sin(lerpingHalfParam * 2 * Mathf.PI);
-        CustomGizmos.BezierWithArrow(bezierPoints, 10, (bezSinParam + 1) / 2, arrowTipSize, currentDirection);
+        CustomGizmos2D.BezierWithArrow(bezierPoints, 10, (bezSinParam + 1) / 2, arrowTipSize, currentDirection);
         
     }
     
@@ -161,7 +168,7 @@ public class CustomGizmos2DTester : MonoBehaviour
             1.5f * (rectSinParam * rectSizeAmplitude + (1 - rectSizeAmplitude)),
             1    * (rectCosParam * rectSizeAmplitude + (1 - rectSizeAmplitude))
         );
-        CustomGizmos.DrawCrossedRect(new Vector3(4,0,1.5f), Vector3.forward, Vector3.right, halfSizes, 5);
+        CustomGizmos2D.DrawCrossedRect(new Vector3(4,0,1.5f), Vector3.forward, Vector3.right, halfSizes, 5);
     }
     
     /// <summary>
@@ -170,7 +177,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     private void Polygons(){
         int sidesCount = 3 + (int)(sidesCountAmplitude * (sinParam + 1) / 2);
         Vector3 currentDirection = Quaternion.AngleAxis(doubleSinParam * normalAmplitude, new Vector3(-1,0,1).normalized) * Vector3.up;
-        CustomGizmos.DrawRegularPoligon(new Vector3(6,0,2) + Vector3.right * sinParam * positionAmplitude, Vector3.right, polygonsRadius, sidesCount, currentDirection);
+        CustomGizmos2D.DrawRegularPoligon(new Vector3(6,0,2) + Vector3.right * sinParam * positionAmplitude, Vector3.right, polygonsRadius, sidesCount, currentDirection);
     }
     
     /// <summary>
@@ -178,8 +185,9 @@ public class CustomGizmos2DTester : MonoBehaviour
     /// </summary>
     private void Circle(){
         Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, new Vector3(-1,0,1).normalized) * Vector3.up;
-        CustomGizmos.DrawRegularPoligon(new Vector3(5,0,4), Vector3.right, circleRadius, 30, currentDirection);
+        CustomGizmos2D.DrawRegularPoligon(new Vector3(5,0,4), Vector3.right, circleRadius, 30, currentDirection);
     }
+    */
     
     
     /// <summary>
@@ -188,7 +196,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     private void MemoryReset(){
         if(resetMemory){
             resetMemory = false;
-            CustomGizmos.ResetBezierMemory();
+            //CustomGizmos2D.ResetBezierMemory();
         }
     }
 }
