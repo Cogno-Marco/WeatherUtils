@@ -71,38 +71,39 @@ public static class BezierCurves
     /// </param>
     /// <returns>A point t * BezierLength along the path, Vector3.zero if there are less than 2 points</returns>
     public static Vector3 Generic(Vector3[] controlPoints, float t){
-        Profiler.BeginSample("Case checking");
         int pointsNum = controlPoints.Length;
         if(pointsNum < 2){
             Debug.LogError("Cannot create a Bezier with less than 2 points");
-            Profiler.EndSample();
             return Vector3.zero;
         }
         
+        Profiler.BeginSample("Case checking");
         //Dynamic Programming: check if already calculated an return it
-        if(oldBeziersLerpsMap.ContainsKey((controlPoints,t))) return oldBeziersLerpsMap[(controlPoints,t)];
-        Vector3 output;
+        if(oldBeziersLerpsMap.ContainsKey((controlPoints,t))){
+            Profiler.EndSample();
+            return oldBeziersLerpsMap[(controlPoints,t)];
+        }
         
         //base case
         if(pointsNum == 2){
             //Dynamic Programming: add calculated point to the list
-            output = Vector3.Lerp(controlPoints[0], controlPoints[1], t);
-            oldBeziersLerpsMap.Add((controlPoints,t), output);
+            Vector3 baseCaseOutput = Vector3.Lerp(controlPoints[0], controlPoints[1], t);
+            oldBeziersLerpsMap.Add((controlPoints,t), baseCaseOutput);
             Profiler.EndSample();
-            return output;
+            return baseCaseOutput;
         }
         
         Profiler.EndSample();
         Profiler.BeginSample("Recursive Case Single Point");
         //divide: creates lists with points [0..n-1] and [1..n]
         Vector3[] sub1 = new Vector3[pointsNum - 1];
-        Vector3[] sub2 = new Vector3[controlPoints.Length - 1];
+        Vector3[] sub2 = new Vector3[pointsNum - 1];
         sub1[0] = controlPoints[0];
         for(int i = 1; i < pointsNum-1; i++){
             sub1[i] = controlPoints[i];
             sub2[i - 1] = controlPoints[i];
         }
-        sub2[controlPoints.Length - 2] = controlPoints[pointsNum-1];
+        sub2[pointsNum - 2] = controlPoints[pointsNum-1];
         
         //recurse: a bezier needs the point of the sub curve
         Vector3 p0 = Generic(sub1, t);
@@ -110,7 +111,7 @@ public static class BezierCurves
         
         //conquer: calcolate new point and return it
         //Dynamic Programming: add calculated point to the list
-        output = Vector3.Lerp(p0, p1, t);
+        Vector3 output = Vector3.Lerp(p0, p1, t);
         oldBeziersLerpsMap.Add((controlPoints,t), output);
         Profiler.EndSample();
         return output;
