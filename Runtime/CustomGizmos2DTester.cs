@@ -75,6 +75,7 @@ public class CustomGizmos2DTester : MonoBehaviour
         Rectangle();
         Polygons();
         Circle();
+        Ellipse();
         Bezier();
         BezierArrow();
         
@@ -157,6 +158,11 @@ public class CustomGizmos2DTester : MonoBehaviour
     private void Circle(){
         CustomGizmos2D.DrawRegularPoligon(new Vector2(6, 2), Vector3.right * circleRadius * sinParam, 30);
     }
+    
+    private void Ellipse(){
+        CustomGizmos2D.DrawEllipse(new Vector2(7, 4), sinParam, new Vector2(1.5f, 0.5f), 20);
+    }
+    
     
     /// <summary>
     /// Calculates and draws bezier curves

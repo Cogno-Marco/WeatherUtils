@@ -75,6 +75,7 @@ public class CustomGizmosTester : MonoBehaviour
         Rectangle();
         Polygons();
         Circle();
+        Ellipse();
         
         //reset params
         MemoryReset();
@@ -180,6 +181,10 @@ public class CustomGizmosTester : MonoBehaviour
         CustomGizmos.DrawRegularPoligon(new Vector3(5,0,4), Vector3.right, circleRadius, 30, currentDirection);
     }
     
+    private void Ellipse(){
+        Vector3 currentDirection = Quaternion.AngleAxis(currentAngle, new Vector3(-1,0,1).normalized) * Vector3.up;
+        CustomGizmos.DrawEllipse(new Vector3(7, 0, 4), Vector3.forward, currentDirection, new Vector2(1.5f, 0.5f), 20);
+    }
     
     /// <summary>
     /// Resets memory footprint for bezier if necessary

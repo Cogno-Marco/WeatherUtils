@@ -204,8 +204,7 @@ public class CustomGizmos2D
     public static void ResetBezierMemory(){
         CustomGizmos.ResetBezierMemory();
     }
-    
-    
+        
     /// <summary>
     /// Draws a bezier curve with a arrow tip inside the curve
     /// </summary>
@@ -218,4 +217,28 @@ public class CustomGizmos2D
         foreach(Vector2 p in points) points3D.Add((Vector3)p);
         CustomGizmos.BezierWithArrow(points3D, resolution, arrowTipParam, arrowTipSize, Vector3.forward);
     }
+    
+    /// <summary>
+    /// Draws an ellipse in 2d space with world aligned axis
+    /// </summary>
+    /// <param name="center">Center position of the ellipse</param>
+    /// <param name="axisLenghts">semiaxis lengths</param>
+    /// <param name="sidesCount">how many sides to draw the ellipse in</param>
+    public static void DrawEllipse(Vector3 center, Vector2 axisLenghts, int sidesCount){
+        CustomGizmos.DrawEllipse(center, Vector2.right, Vector2.up, axisLenghts, sidesCount);
+    }
+    
+    /// <summary>
+    /// Draws an ellipse in 2d space rotated axis
+    /// </summary>
+    /// <param name="center">Center position of the ellipse</param>
+    /// <param name="angle">Angle to rotate the ellipse in radians</param>
+    /// <param name="axisLenghts">length of the semiaxis</param>
+    /// <param name="sidesCount">how many sides to draw the ellipse in</param>
+    public static void DrawEllipse(Vector3 center, float angle, Vector2 axisLenghts, int sidesCount){
+        Vector3 rightAxis = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg) * Vector3.right;
+        Vector3 upAxis = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg) * Vector3.up;
+        CustomGizmos.DrawEllipse(center, rightAxis, upAxis, axisLenghts, sidesCount);
+    }
+    
 }

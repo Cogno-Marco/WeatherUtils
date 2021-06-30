@@ -391,6 +391,25 @@ public class CustomGizmos
         }
     }
 
+    /// <summary>
+    /// Draws an ellipse in 3d space given enough information
+    /// </summary>
+    /// <param name="center">The center position of the ellipse</param>
+    /// <param name="rightDir">The direction of one of the semiaxis</param>
+    /// <param name="upDir">Direction of the other semiaxis</param>
+    /// <param name="axisLenghts">Length of both semiaxis, if equal it will draw a circle</param>
+    /// <param name="sidesCount">How many segments to draw the ellipse in</param>
+    public static void DrawEllipse(Vector3 center, Vector3 rightDir, Vector3 upDir, Vector2 axisLenghts, int sidesCount){
+        float a = axisLenghts.x;
+        float b = axisLenghts.y;
+        
+        for(int i = 0; i < sidesCount; i++){
+            float angleStep = 2f * Mathf.PI / sidesCount;
+            Vector3 p1 = center + a * rightDir * Mathf.Cos(angleStep * i)       + b * upDir * Mathf.Sin(angleStep * i);
+            Vector3 p2 = center + a * rightDir * Mathf.Cos(angleStep * (i + 1)) + b * upDir * Mathf.Sin(angleStep * (i + 1));
+            Gizmos.DrawLine(p1, p2);
+        }
+    }
 
     private struct BezierKeyPoints
     {
