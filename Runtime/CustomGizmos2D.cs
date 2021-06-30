@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 /// <summary>
 /// Class for using 2d version of gizmos.
@@ -163,11 +164,7 @@ public class CustomGizmos2D
     /// <param name="cPos">The ending position of the curve</param>
     /// <param name="resolution">how many middle lines to draw, used to change resolution, must be >= 0 </param>
     public static void Bezier(Vector2 aPos, Vector2 bPos, Vector2 cPos, int resolution){
-        List<Vector3> list = new List<Vector3>();
-        list.Add(aPos);
-        list.Add(bPos);
-        list.Add(cPos);
-        CustomGizmos.Bezier(list, resolution);
+        CustomGizmos.Bezier(new Vector3[]{aPos, bPos, cPos}, resolution);
     }
     
     /// <summary>
@@ -176,9 +173,14 @@ public class CustomGizmos2D
     /// <param name="points">The list of points to draw, must not be null and must be >= 2 in length</param>
     /// <param name="resolution">How many lines to draw, used to change resolution, must be >= 0 </param>
     public static void Bezier(List<Vector2> points, int resolution){
-        List<Vector3> points3D = new List<Vector3>();
-        foreach(Vector2 p in points) points3D.Add((Vector3)p);
+        Profiler.BeginSample("Vector3 -> Vector2 Conversion");
+        Vector3[] points3D = new Vector3[points.Count];
+        for(int i = 0; i < points.Count; i++)
+            points3D[i] = ((Vector3)points[i]);
+        Profiler.EndSample();
+        Profiler.BeginSample("3D Bezier");
         CustomGizmos.Bezier(points3D, resolution);
+        Profiler.EndSample();
     }
     
     /// <summary>
@@ -190,12 +192,7 @@ public class CustomGizmos2D
     /// <param name="dPos">The ending position of the curve</param>
     /// <param name="resolution">how many middle lines to draw, used to change resolution, must be >= 0 </param>
     public static void CubicBezier(Vector2 aPos, Vector2 bPos, Vector2 cPos, Vector2 dPos, int resolution){
-        List<Vector3> list = new List<Vector3>();
-        list.Add(aPos);
-        list.Add(bPos);
-        list.Add(cPos);
-        list.Add(dPos);
-        CustomGizmos.Bezier(list, resolution);
+        CustomGizmos.Bezier(new Vector3[]{aPos, bPos, cPos, dPos}, resolution);
     }
     
     /// <summary>

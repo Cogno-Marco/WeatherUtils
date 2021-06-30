@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class CustomGizmos2DTester : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     [Range(0f, 2f)]
     public float circleRadius = 2f;
     
+    public List<Vector2> bezPoints;
     
     [ReadOnly] public float currentAngle;
     private float lerpingParam;
@@ -78,7 +80,9 @@ public class CustomGizmos2DTester : MonoBehaviour
         Ellipse();
         Bezier();
         BezierArrow();
-        
+        Profiler.BeginSample("2D Bezier");
+        CustomGizmos2D.Bezier(bezPoints, 40);
+        Profiler.EndSample();
         //reset params
         MemoryReset();
         lastEditorTime = currentTime;

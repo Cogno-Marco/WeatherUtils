@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [ExecuteInEditMode]
 public class BezierTester : MonoBehaviour
@@ -33,12 +34,12 @@ public class BezierTester : MonoBehaviour
                 transform.GetChild(2).position,
                 t
             );
-            bezierPoints = BezierCurves.QuadraticPointsList(
+            bezierPoints = new List<Vector3>(BezierCurves.QuadraticPointsList(
                 transform.GetChild(0).position,
                 transform.GetChild(1).position,
                 transform.GetChild(2).position,
                 pointsNumber
-            );
+            ));
         }
         //if there are 4 childrens, calculate cubic curves
         else if(transform.childCount == 4){
@@ -49,13 +50,13 @@ public class BezierTester : MonoBehaviour
                 transform.GetChild(3).position,
                 t
             );
-            bezierPoints = BezierCurves.CubicPointsList(
+            bezierPoints = new List<Vector3>(BezierCurves.CubicPointsList(
                 transform.GetChild(0).position,
                 transform.GetChild(1).position,
                 transform.GetChild(2).position,
                 transform.GetChild(3).position,
                 pointsNumber
-            );
+            ));
         }
         //else if the are more than 4, calculate generic curves
         else if (transform.childCount > 4){
@@ -63,8 +64,12 @@ public class BezierTester : MonoBehaviour
             for(int i = 0; i < transform.childCount; i++){
                 controlPoints.Add(transform.GetChild(i).position);
             }
-            lerpBezierPos = BezierCurves.Generic(controlPoints, t);
-            bezierPoints = BezierCurves.GenericPointsList(controlPoints, pointsNumber);
+            Profiler.BeginSample("Bezier Point Calculation");
+            lerpBezierPos = BezierCurves.Generic(controlPoints.ToArray(), t);
+            Profiler.EndSample();
+            Profiler.BeginSample("Bezier List Calculation");
+            bezierPoints = new List<Vector3>(BezierCurves.GeneralBezier(controlPoints.ToArray(), pointsNumber));
+            Profiler.EndSample();
         }
     }
     
@@ -84,7 +89,6 @@ public class BezierTester : MonoBehaviour
         if(bezierPoints == null) return;
         
         Gizmos.color = Color.yellow;
-        print(bezierPoints.Count);
         for(int i = 0; i < bezierPoints.Count-1; i++){
             Vector3 pointA = bezierPoints[i];
             Vector3 pointB = bezierPoints[i+1];

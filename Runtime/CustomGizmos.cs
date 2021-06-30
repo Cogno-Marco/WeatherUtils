@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-using System.Linq;
+using UnityEngine.Profiling;
 
 public class CustomGizmos
 {
-    private static Dictionary<BezierKeyPoints, Vector3[]> bezierMap = new Dictionary<BezierKeyPoints, Vector3[]>();
-    
     /// <summary>
     /// Draws a gizmo arrow at startPos pointing at endPos
     /// </summary>
@@ -176,8 +174,6 @@ public class CustomGizmos
     /// <param name="bPos">The starting position of the second ray</param>
     /// <param name="bDir">The direction of the second ray</param>
     private static float GetIntersectionParam(Vector3 aPos, Vector3 aDir, Vector3 bPos, Vector3 bDir){
-        
-        
         float dx = aPos.x - bPos.x;
         float dz = aPos.z - bPos.z;
         float det = aDir.x * bDir.z - aDir.z * bDir.x;
@@ -209,11 +205,7 @@ public class CustomGizmos
     /// <param name="cPos">The ending position of the curve</param>
     /// <param name="resolution">how many middle lines to draw, used to change resolution, must be >= 0 </param>
     public static void Bezier(Vector3 aPos, Vector3 bPos, Vector3 cPos, int resolution){
-        List<Vector3> list = new List<Vector3>();
-        list.Add(aPos);
-        list.Add(bPos);
-        list.Add(cPos);
-        Bezier(list, resolution);
+        Bezier(new Vector3[]{aPos, bPos, cPos}, resolution);
     }
     
     /// <summary>
@@ -225,12 +217,7 @@ public class CustomGizmos
     /// <param name="dPos">The ending position of the curve</param>
     /// <param name="resolution">how many middle lines to draw, used to change resolution, must be >= 0 </param>
     public static void CubicBezier(Vector3 aPos, Vector3 bPos, Vector3 cPos, Vector3 dPos, int resolution){
-        List<Vector3> list = new List<Vector3>();
-        list.Add(aPos);
-        list.Add(bPos);
-        list.Add(cPos);
-        list.Add(dPos);
-        Bezier(list, resolution);
+        Bezier(new Vector3[]{aPos, bPos, cPos, dPos}, resolution + 1);
     }
     
     /// <summary>
@@ -238,78 +225,23 @@ public class CustomGizmos
     /// </summary>
     /// <param name="points">The list of points to draw, must not be null and must be >= 2 in length</param>
     /// <param name="resolution">How many lines to draw, used to change resolution, must be >= 0 </param>
-    public static void Bezier(List<Vector3> points, int resolution){
-        if(points.Count < 2) throw new System.ArgumentException("there must be at least 2 points to work!");
-        List<Vector3> toDraw = new List<Vector3>(GeneralBezier(points.ToArray(), resolution));
-        for(int i = 0; i < toDraw.Count-1; i++){
-            Gizmos.DrawLine(toDraw[i], toDraw[i+1]);
-        }
-    }
-    
-    /// <summary>
-    /// Returns a list with the points of the bezier curve
-    /// </summary>
-    /// <param name="points">The list of points to draw, must not be null and must be >= 2 in length</param>
-    /// <param name="resolution">How many lines to draw, used to change resolution, must be >= 0 </param>
-    /// <returns>Returns a list of points: the points interpolated in the bezier curve</returns>
-    private static Vector3[] GeneralBezier(Vector3[] points, int resolution){
+    public static void Bezier(Vector3[] points, int resolution){
         if(points.Length < 2) throw new System.ArgumentException("there must be at least 2 points to work!");
-        
-        //base cases
-        if(bezierMap.ContainsKey((points, resolution)))
-            return bezierMap[(points, resolution)];
-        
-        if(points.Length == 2){
-            bezierMap.Add((points, resolution), LinearBezier(points[0], points[1], resolution));
-            return bezierMap[(points, resolution)];
+        Profiler.BeginSample("Bezier Calculation");
+        Vector3[] toDraw = BezierCurves.GeneralBezier(points, resolution + 1);
+        Profiler.EndSample();
+        Profiler.BeginSample("Curve drawing");
+        for(int i = 0; i < toDraw.Length - 1; i++){
+            Gizmos.DrawLine(toDraw[i], toDraw[i + 1]);
         }
-        
-        //recursive case
-        //1. create 2 lists, the first with the point from 0 to n-1, the second with the points from 1 to n
-        Vector3[] arr1 = new Vector3[points.Length - 1];
-        Vector3[] arr2 = new Vector3[points.Length - 1];
-        
-        for(int i = 0; i < points.Length - 1; i++){
-            arr1[i] = points[i];
-            arr2[i] = points[i+1];
-        }
-        
-        //recursive call itself to get intermediate points
-        Vector3[] interm1 = GeneralBezier(arr1, resolution);
-        Vector3[] interm2 = GeneralBezier(arr2, resolution);
-        
-        //final lerp these 2 curves
-        float step = 1f / resolution;
-        Vector3[] output = new Vector3[interm1.Length];
-        for(int i = 0; i < interm1.Length; i++){
-            output[i] = Vector3.Lerp(interm1[i], interm2[i], step * i);
-        }
-        bezierMap.Add((points, resolution), output);
-        return output;
+        Profiler.EndSample();
     }
     
     /// <summary>
     /// Resets the bezier dinamic memory
     /// </summary>
     public static void ResetBezierMemory(){
-        bezierMap.Clear();
-        Debug.Log("Memory Cleaned");
-    }
-    
-    /// <summary>
-    /// Base case: linear implementation of a bezier curve, basically a lerp
-    /// </summary>
-    /// <param name="aPos">The starting position of the bezier curve</param>
-    /// <param name="bPos">The ending position of the bezier curve</param>
-    /// <param name="resolution">how many lines to draw</param>
-    /// <returns>Returns a list of points: the points interpolated in the bezier curve</returns>
-    private static Vector3[] LinearBezier(Vector3 aPos, Vector3 bPos, int resolution){
-        Vector3[] output = new Vector3[resolution + 1];
-        for(int i = 0; i <= resolution; i++){
-            output[i] = Vector3.Lerp(aPos, bPos, (float)(i) / resolution);
-        }
-        //since I'm here the linear version was calculated, add to dict (if there was I wouldn't be here)
-        return output;
+        BezierCurves.CleanMemory();
     }
     
     /// <summary>
@@ -321,21 +253,21 @@ public class CustomGizmos
     /// <param name="arrowTipSize">The size of the arrow tip</param>
     /// <param name="normal">Normal vector of the arrow tip, used to orient the arrow in a custom direction</param>
     public static void BezierWithArrow(List<Vector3> points, int resolution, float arrowTipParam, float arrowTipSize, Vector3 normal){
-        List<Vector3> bezier = new List<Vector3>(GeneralBezier(points.ToArray(), resolution));
+        Vector3[] bezier = BezierCurves.GeneralBezier(points.ToArray(), resolution);
         float bezierCurveLength = 0;
-        for(int i = 0; i < bezier.Count-1; i++){
-            bezierCurveLength += (bezier[i+1] - bezier[i]).magnitude;
+        for(int i = 0; i < bezier.Length - 1; i++){
+            bezierCurveLength += (bezier[i + 1] - bezier[i]).magnitude;
         }
 
         arrowTipParam *= (1 - 2f * arrowTipSize / bezierCurveLength);
-        int linesCount = bezier.Count - 1;
+        int linesCount = bezier.Length - 1;
         int paramLine = (int)(arrowTipParam * linesCount);
         
         float endPosParam = arrowTipParam + 2f * arrowTipSize / bezierCurveLength;
         int endParamLine = (int)(endPosParam * linesCount);
         
         Vector3 arrowStartPos = Vector3.Lerp(bezier[paramLine], bezier[paramLine+1], arrowTipParam * linesCount - paramLine);
-        Vector3 arrowEndPos = Vector3.Lerp(bezier[endParamLine], bezier[(endParamLine+1)%bezier.Count], endPosParam * linesCount - endParamLine);
+        Vector3 arrowEndPos = Vector3.Lerp(bezier[endParamLine], bezier[(endParamLine+1) % bezier.Length], endPosParam * linesCount - endParamLine);
         
         DrawArrowTip(arrowStartPos, (arrowEndPos - arrowStartPos).normalized, arrowTipSize, normal - Vector3.Project(normal, (arrowEndPos - arrowStartPos).normalized));
         
@@ -354,16 +286,15 @@ public class CustomGizmos
         
         List<Vector3> secondPartList = new List<Vector3>();
         secondPartList.Add(arrowEndPos);
-        for(int i = endParamLine+1; i < bezier.Count; i++){
+        for(int i = endParamLine + 1; i < bezier.Length; i++){
             Vector3 point = bezier[i];
             secondPartList.Add(bezier[i]);
         }
         
         for(int i = 0; i < secondPartList.Count - 1; i++){
-            Gizmos.DrawLine(secondPartList[i], secondPartList[i+1]);
+            Gizmos.DrawLine(secondPartList[i], secondPartList[i + 1]);
         }
     }
-    
 
     /// <summary>
     /// Draws a regular poligon (triangle, square, pentagon and so on) given it's center, the direction and length of it's radius,
@@ -411,47 +342,4 @@ public class CustomGizmos
         }
     }
 
-    private struct BezierKeyPoints
-    {
-        public Vector3[] keyPoints;
-        public int resolution;
-
-        public BezierKeyPoints(Vector3[] keyPoints, int resolution)
-        {
-            this.keyPoints = keyPoints;
-            this.resolution = resolution;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is BezierKeyPoints other && resolution == other.resolution &&
-                keyPoints.SequenceEqual(other.keyPoints);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = -1030903623;
-            foreach (Vector3 item in keyPoints)
-                hashCode = hashCode * -1521134295 + item.GetHashCode();
-            hashCode = hashCode * -1521134295 + resolution.GetHashCode();
-            return hashCode;
-        }
-
-        public void Deconstruct(out Vector3[] item1, out int item2)
-        {
-            item1 = keyPoints;
-            item2 = resolution;
-        }
-
-        public static implicit operator (Vector3[], int)(BezierKeyPoints value)
-        {
-            return (value.keyPoints, value.resolution);
-        }
-
-        public static implicit operator BezierKeyPoints((Vector3[], int) value)
-        {
-            return new BezierKeyPoints(value.Item1, value.Item2);
-        }
-    }
-    
 }
