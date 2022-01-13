@@ -43,7 +43,7 @@ public class CustomGizmos2DTester : MonoBehaviour
     public List<Vector2> bezPoints;
     
     [ReadOnly] public float currentAngle;
-    private float lerpingParam;
+    [FGraph] public float lerpingParam;
     private float lerpingHalfParam;
     private float editorDeltaTime;
     private float lastEditorTime;

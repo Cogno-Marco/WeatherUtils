@@ -28,22 +28,39 @@ void Update(){
 }
 ```
 
-# Custom Gizmos
+# CustomGizmos (and CustomGizmo2D)
 A collection of useful development Editor-only gizmos.
-You can see them here:
+You can see some of them here:
 ![](Documentation/GizmoLibrary.gif)
 
 ### Usage
-These gizmos only work inside `OnDrawGizmos` and `onDrawGizmosSelected` Unity functions.
+These gizmos only work inside `OnDrawGizmos` and `OnDrawGizmosSelected` Unity functions.
 Simply setup a color and use them like this:
 ```CSharp
 private void OnDrawGizmos(){
     Gizmos.Color = Color.green;
     CustomGizmos.DrawArrow(...);
+    CustomGizmos2D.DrawEllipse(...);
 }
 ```
 You can see documentation on each function in the `CustomGizmos.cs` file and a usage example in `CustomGizmosTester.cs`
 
+
+# Singleton
+
+A simple Singleton class to avoid code duplication
+Say you have `public class YourClass : Monobehaviour` which you want to be a singleton. Simply write `public class YourClass : Singleton<YourClass>` and the package will do the rest.
+After that you get the Singleton Instance using `YourClass.GetInstance()`.
+
+# ReadOnly Attribute
+An attribute used to create ReadOnly variables.
+Simply mark a variable with `[ReadOnly]` to make it read only (meaning you won't be able to edit it into the inspector, but you'll still be able to see it).
+
+# Graph Attribute
+An attribute used to show a variable as a Graph over time.
+Useful for debugging purposes.
+Simply mark a variable with `[Graph]` or `[FGraph]` to see it in the inspector as a graph. During play every change to the variable will be seen in the graph in the inspector.
+`[Graph]` is updated in LateUpdate, while `[FGraph]` is updated in FixedUpdate.
 
 # Contributing
 Contributions on this repository are accepted!

@@ -1,6 +1,6 @@
 {
   "name": "com.weatherlight.weather-utils",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "displayName": "Weatherlight Utils",
   "description": "Weatherlight Custom Utilities Package",
   "unity": "2019.1",
