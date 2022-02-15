@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 /// <summary>
@@ -54,3 +55,4 @@ public class FGraphDrawer : PropertyDrawer
         GUI.enabled = previousGUIState;
     }
 }
+#endif

@@ -9,7 +9,6 @@ using UnityEditor;
 
 public class CurveGrapher : MonoBehaviour
 {
-    
     private List<CurveData> trackedProperties = new List<CurveData>();
     
     void LateUpdate()
@@ -33,36 +32,37 @@ public class CurveGrapher : MonoBehaviour
         var targetObject = data.unityObject;
         System.Reflection.FieldInfo field = targetObject.GetType().GetField(data.propertyName);
 
-        if (field != null)
-        {
-            var value = field.GetValue(targetObject);
-            data.curve.AddKey(Time.time, (float)value);
-            
-            //set last 3 keys tangents to make them linear
-            if(data.curve.keys.Length > 3){
-                //get keys
-                Keyframe[] keys = data.curve.keys;
-                Keyframe finalKey = keys[keys.Length - 1];
-                Keyframe lastKey = keys[keys.Length - 2];
-                Keyframe previousKey = keys[keys.Length - 3];
-                
-                //edit tangents from third to second
-                float tangent = (lastKey.value - previousKey.value) / (lastKey.time - previousKey.time);
-                previousKey.outTangent = tangent;
-                lastKey.inTangent = tangent;
-                
-                //edit tangents from second to first
-                tangent = (finalKey.value - lastKey.value) / (finalKey.time - lastKey.time);
-                lastKey.outTangent = tangent;
-                finalKey.inTangent = tangent;
-                
-                //set keys
-                keys[keys.Length - 1] = finalKey;
-                keys[keys.Length - 2] = lastKey;
-                keys[keys.Length - 3] = previousKey;
-                data.curve.keys = keys;
-            }
-        }
+        //graph only valid fields
+        if (field == null) return;
+    
+        var value = field.GetValue(targetObject);
+        data.curve.AddKey(Time.time, (float)value);
+        
+        //set last 3 keys tangents to make them linear
+        if(data.curve.keys.Length <= 3)
+            return;
+
+        //get keys
+        Keyframe[] keys = data.curve.keys;
+        Keyframe finalKey = keys[keys.Length - 1];
+        Keyframe lastKey = keys[keys.Length - 2];
+        Keyframe previousKey = keys[keys.Length - 3];
+        
+        //edit tangents from third to second
+        float tangent = (lastKey.value - previousKey.value) / (lastKey.time - previousKey.time);
+        previousKey.outTangent = tangent;
+        lastKey.inTangent = tangent;
+        
+        //edit tangents from second to first
+        tangent = (finalKey.value - lastKey.value) / (finalKey.time - lastKey.time);
+        lastKey.outTangent = tangent;
+        finalKey.inTangent = tangent;
+        
+        //set keys
+        keys[keys.Length - 1] = finalKey;
+        keys[keys.Length - 2] = lastKey;
+        keys[keys.Length - 3] = previousKey;
+        data.curve.keys = keys;
     }
     
     public AnimationCurve GetCurve(SerializedProperty property){
